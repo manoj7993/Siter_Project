@@ -11,10 +11,14 @@ class User {
       const saltRounds = parseInt(process.env.BCRYPT_ROUNDS) || 12;
       const hashedPassword = await bcrypt.hash(userData.password, saltRounds);
 
+      // Convert dateOfBirth to proper DateTime format
+      const dateOfBirth = new Date(userData.dateOfBirth);
+
       const user = await prisma.user.create({
         data: {
           ...userData,
           password: hashedPassword,
+          dateOfBirth: dateOfBirth,
         },
         include: {
           country: true,
@@ -56,6 +60,41 @@ class User {
         return userWithoutPassword;
       }
       return null;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  static async findOne(criteria) {
+    try {
+      const user = await prisma.user.findFirst({
+        where: criteria,
+        include: {
+          country: true,
+        },
+      });
+
+      return user; // Return with password for authentication purposes
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  static async findCountryByIdOrCode(idOrCode) {
+    try {
+      // First try to find by ID (if it looks like a CUID)
+      if (idOrCode.length > 10) {
+        const country = await prisma.country.findUnique({
+          where: { id: idOrCode }
+        });
+        if (country) return country;
+      }
+      
+      // Try to find by code
+      const country = await prisma.country.findFirst({
+        where: { code: idOrCode }
+      });
+      return country;
     } catch (error) {
       throw error;
     }

@@ -208,3 +208,101 @@ coverage/
 # Lock files (keep one, comment out the other)
 package-lock.json
 # yarn.lock
+
+# Additional unnecessary files
+*.map
+*.min.js
+*.min.css
+
+# Compiled TypeScript
+*.js.map
+*.d.ts.map
+
+# Build artifacts
+build/
+out/
+lib/
+
+# Test output
+test-output/
+test-reports/
+junit.xml
+*.test.js.snap
+
+# Editor and IDE files
+*.sublime-project
+*.sublime-workspace
+.vscode/settings.json
+.vscode/launch.json
+.vscode/extensions.json
+.history/
+
+# Configuration files (environment specific)
+config/local.json
+config/development.json
+config/production.json
+.env.*.local
+
+# Certificate files
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+
+# Archive files
+*.zip
+*.tar
+*.tar.gz
+*.rar
+*.7z
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Python cache (if mixed tech stack)
+__pycache__/
+*.pyc
+*.pyo
+
+# MacOS specific
+.AppleDouble
+.LSOverride
+Icon?
+
+# Windows specific
+desktop.ini
+$RECYCLE.BIN/
+
+# Linux specific
+*~
+.fuse_hidden*
+.nfs*
+
+# Runtime/Process files
+.pid
+.seed
+.coverage
+
+# Sass cache
+.sass-cache/
+
+# Documentation builds
+docs/_build/
+site/
+
+# Deployment files
+.deploy/
+deploy.sh
+deployment/
+
+# Monitoring and profiling
+*.heap
+*.cpuprofile
+flamegraph.html
+
+# Security and sensitive files
+.secrets/
+secrets.json
+private.key
+*.env.backup

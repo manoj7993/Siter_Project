@@ -16,7 +16,20 @@ exports.register = async (req, res, next) => {
       });
     }
 
-    const { firstName, lastName, email, password, dateOfBirth, contactNumber, zipCode, country } = req.body;
+    const { firstName, lastName, email, password, dateOfBirth, contactNumber, zipCode, countryId } = req.body;
+
+    // Find the country by code or ID
+    let country;
+    if (countryId) {
+      // First try to find by ID, then by code
+      country = await User.findCountryByIdOrCode(countryId);
+      if (!country) {
+        return res.status(400).json({
+          success: false,
+          message: 'Invalid country specified'
+        });
+      }
+    }
 
     // Check if user already exists
     const existingUser = await User.findOne({ email });
@@ -36,18 +49,18 @@ exports.register = async (req, res, next) => {
       dateOfBirth,
       contactNumber,
       zipCode,
-      country
+      countryId: country.id
     });
 
     // Generate token
-    const token = user.getSignedJwtToken();
+    const token = User.generateToken(user.id);
 
     res.status(201).json({
       success: true,
       message: 'User registered successfully',
       token,
       user: {
-        id: user._id,
+        id: user.id,
         firstName: user.firstName,
         lastName: user.lastName,
         email: user.email,
@@ -77,7 +90,7 @@ exports.login = async (req, res, next) => {
     const { email, password } = req.body;
 
     // Check for user
-    const user = await User.findOne({ email }).select('+password').populate('country');
+    const user = await User.findOne({ email });
 
     if (!user) {
       return res.status(401).json({
@@ -95,7 +108,7 @@ exports.login = async (req, res, next) => {
     }
 
     // Check if password matches
-    const isMatch = await user.matchPassword(password);
+    const isMatch = await User.comparePassword(password, user.password);
 
     if (!isMatch) {
       return res.status(401).json({
@@ -105,24 +118,23 @@ exports.login = async (req, res, next) => {
     }
 
     // Update last login
-    user.lastLogin = new Date();
-    await user.save();
+    const updatedUser = await User.updateById(user.id, { lastLogin: new Date() });
 
     // Generate token
-    const token = user.getSignedJwtToken();
+    const token = User.generateToken(user.id);
 
     res.status(200).json({
       success: true,
       message: 'Login successful',
       token,
       user: {
-        id: user._id,
+        id: user.id,
         firstName: user.firstName,
         lastName: user.lastName,
         email: user.email,
         role: user.role,
         country: user.country,
-        lastLogin: user.lastLogin
+        lastLogin: updatedUser.lastLogin
       }
     });
   } catch (error) {
