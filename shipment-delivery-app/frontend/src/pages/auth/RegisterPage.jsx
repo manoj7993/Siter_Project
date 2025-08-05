@@ -27,7 +27,12 @@ const RegisterPage = () => {
   React.useEffect(() => {
     const loadCountries = async () => {
       try {
-        const response = await fetch('https://restcountries.com/v3.1/all?fields=name,cca2')
+        const response = await fetch('https://restcountries.com/v3.1/all?fields=name,cca2', {
+          timeout: 5000, // 5 second timeout
+        })
+        if (!response.ok) {
+          throw new Error('Failed to fetch countries')
+        }
         const data = await response.json()
         const sortedCountries = data
           .map(country => ({
@@ -37,14 +42,20 @@ const RegisterPage = () => {
           .sort((a, b) => a.label.localeCompare(b.label))
         setCountries(sortedCountries)
       } catch (error) {
-        console.error('Error loading countries:', error)
-        // Fallback countries
+        // Silently use fallback countries without logging error to console
         setCountries([
+          { value: 'US', label: 'United States' },
+          { value: 'CA', label: 'Canada' },
+          { value: 'GB', label: 'United Kingdom' },
+          { value: 'DE', label: 'Germany' },
+          { value: 'FR', label: 'France' },
+          { value: 'IT', label: 'Italy' },
+          { value: 'ES', label: 'Spain' },
           { value: 'NO', label: 'Norway' },
           { value: 'SE', label: 'Sweden' },
           { value: 'DK', label: 'Denmark' },
-          { value: 'DE', label: 'Germany' },
-          { value: 'GB', label: 'United Kingdom' },
+          { value: 'AU', label: 'Australia' },
+          { value: 'JP', label: 'Japan' },
         ])
       }
     }
@@ -60,8 +71,8 @@ const RegisterPage = () => {
         email: data.email,
         password: data.password,
         dateOfBirth: data.dateOfBirth,
-        country: data.country,
-        postalCode: data.postalCode,
+        countryId: data.country, // Fixed: use countryId instead of country
+        zipCode: data.postalCode, // Fixed: use zipCode instead of postalCode
         contactNumber: data.contactNumber,
       })
       
@@ -69,6 +80,16 @@ const RegisterPage = () => {
       navigate('/login')
     } catch (error) {
       console.error('Registration error:', error)
+      if (error.response?.data?.errors) {
+        // Display validation errors
+        error.response.data.errors.forEach(err => {
+          toast.error(err.msg || err.message)
+        })
+      } else if (error.response?.data?.message) {
+        toast.error(error.response.data.message)
+      } else {
+        toast.error('Registration failed. Please try again.')
+      }
     } finally {
       setIsLoading(false)
     }

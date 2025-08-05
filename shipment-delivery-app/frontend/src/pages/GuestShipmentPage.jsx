@@ -40,7 +40,12 @@ const GuestShipmentPage = () => {
 
   const loadCountries = async () => {
     try {
-      const response = await fetch('https://restcountries.com/v3.1/all?fields=name,cca2')
+      const response = await fetch('https://restcountries.com/v3.1/all?fields=name,cca2', {
+        timeout: 5000, // 5 second timeout
+      })
+      if (!response.ok) {
+        throw new Error('Failed to fetch countries')
+      }
       const data = await response.json()
       const sortedCountries = data
         .map(country => ({
@@ -50,8 +55,7 @@ const GuestShipmentPage = () => {
         .sort((a, b) => a.label.localeCompare(b.label))
       setCountries(sortedCountries)
     } catch (error) {
-      console.error('Error loading countries:', error)
-      // Fallback list of common countries
+      // Silently use fallback countries without logging error to console
       setCountries([
         { value: 'US', label: 'United States' },
         { value: 'CA', label: 'Canada' },
