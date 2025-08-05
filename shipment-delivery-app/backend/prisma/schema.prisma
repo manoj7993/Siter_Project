@@ -1,0 +1,182 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id              String   @id @default(cuid())
+  email           String   @unique
+  firstName       String
+  lastName        String
+  password        String
+  dateOfBirth     DateTime
+  contactNumber   String
+  zipCode         String
+  countryId       String
+  role            Role     @default(REGISTERED_USER)
+  isActive        Boolean  @default(true)
+  emailVerified   Boolean  @default(false)
+  emailVerificationToken String?
+  passwordResetToken String?
+  passwordResetExpires DateTime?
+  lastLogin       DateTime?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // Relations
+  country         Country  @relation(fields: [countryId], references: [id])
+  shipments       Shipment[]
+
+  @@map("users")
+}
+
+model Country {
+  id           String   @id @default(cuid())
+  name         String   @unique
+  code         String   @unique @db.VarChar(2)
+  currency     String   @db.VarChar(3)
+  multiplier   Float    @default(1.0)
+  continent    Continent
+  shippingZone ShippingZone @default(ZONE1)
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Relations
+  users        User[]
+  shipments    Shipment[]
+
+  @@map("countries")
+}
+
+model Box {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  length      Float
+  width       Float
+  height      Float
+  weight      Float
+  basePrice   Float
+  color       String
+  description String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  shipments   Shipment[]
+
+  @@map("boxes")
+}
+
+model Shipment {
+  id                    String   @id @default(cuid())
+  trackingNumber        String   @unique
+  senderId              String
+  receiverFirstName     String
+  receiverLastName      String
+  receiverEmail         String
+  receiverContactNumber String
+  receiverStreet        String
+  receiverCity          String
+  receiverState         String?
+  receiverZipCode       String
+  receiverCountryId     String
+  boxId                 String
+  contents              String
+  weight                Float
+  shippingCost          Float
+  status                ShipmentStatus @default(CREATED)
+  priority              Priority @default(NORMAL)
+  estimatedDeliveryDate DateTime?
+  actualDeliveryDate    DateTime?
+  paymentStatus         PaymentStatus @default(PENDING)
+  paymentMethod         PaymentMethod @default(CREDIT_CARD)
+  isInsured             Boolean @default(false)
+  insuranceValue        Float @default(0)
+  notes                 String?
+  isFragile             Boolean @default(false)
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  // Relations
+  sender                User @relation(fields: [senderId], references: [id])
+  receiverCountry       Country @relation(fields: [receiverCountryId], references: [id])
+  box                   Box @relation(fields: [boxId], references: [id])
+  trackingHistory       TrackingHistory[]
+
+  @@map("shipments")
+}
+
+model TrackingHistory {
+  id          String   @id @default(cuid())
+  shipmentId  String
+  status      String
+  location    String
+  description String?
+  timestamp   DateTime @default(now())
+
+  // Relations
+  shipment    Shipment @relation(fields: [shipmentId], references: [id], onDelete: Cascade)
+
+  @@map("tracking_history")
+}
+
+enum Role {
+  GUEST
+  REGISTERED_USER
+  ADMINISTRATOR
+}
+
+enum Continent {
+  AFRICA
+  ANTARCTICA
+  ASIA
+  EUROPE
+  NORTH_AMERICA
+  OCEANIA
+  SOUTH_AMERICA
+}
+
+enum ShippingZone {
+  DOMESTIC
+  ZONE1
+  ZONE2
+  ZONE3
+}
+
+enum ShipmentStatus {
+  CREATED
+  RECIEVED
+  INTRANSIT
+  COMPLETED
+  CANCELLED
+}
+
+enum Priority {
+  NORMAL
+  EXPRESS
+  URGENT
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+  REFUNDED
+}
+
+enum PaymentMethod {
+  CREDIT_CARD
+  DEBIT_CARD
+  PAYPAL
+  BANK_TRANSFER
+  CASH
+}
