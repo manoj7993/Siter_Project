@@ -3,7 +3,6 @@ import { useForm } from 'react-hook-form'
 import { User, Mail, Calendar, MapPin, Phone, Edit2, Save, X } from 'lucide-react'
 import { useAuthContext } from '../../contexts/AuthContext'
 import { authAPI } from '../../services/api'
-import Layout from '../../components/layout/Layout'
 import Button from '../../components/ui/Button'
 import Input from '../../components/ui/Input'
 import Select from '../../components/ui/Select'
@@ -102,33 +101,30 @@ const ProfilePage = () => {
   // Don't show profile page for guest users
   if (user?.role === 'GUEST') {
     return (
-      <Layout>
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <Card className="p-8 text-center">
-            <User className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">
-              Account Access Restricted
-            </h2>
-            <p className="text-gray-600 mb-6">
-              Guest users don't have access to account management. To access your account features, 
-              please create an account using the link from your shipment receipt email.
-            </p>
-            <Button onClick={() => window.location.href = '/login'}>
-              Go to Login
-            </Button>
-          </Card>
-        </div>
-      </Layout>
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <Card className="p-8 text-center">
+          <User className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">
+            Account Access Restricted
+          </h2>
+          <p className="text-gray-600 mb-6">
+            Guest users don't have access to account management. To access your account features, 
+            please create an account using the link from your shipment receipt email.
+          </p>
+          <Button onClick={() => window.location.href = '/login'}>
+            Go to Login
+          </Button>
+        </Card>
+      </div>
     )
   }
 
   return (
-    <Layout>
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Account Settings</h1>
-          <p className="text-gray-600 mt-2">
+    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      {/* Header */}
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold text-gray-900">Account Settings</h1>
+        <p className="text-gray-600 mt-2">
             Manage your personal information and account preferences
           </p>
         </div>
@@ -373,8 +369,7 @@ const ProfilePage = () => {
             </Card>
           </div>
         </div>
-      </div>
-    </Layout>
+    </div>
   )
 }
 

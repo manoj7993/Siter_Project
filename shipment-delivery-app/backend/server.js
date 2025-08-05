@@ -102,7 +102,6 @@ if (process.env.NODE_ENV === 'development') {
 app.use('/uploads', express.static('uploads'));
 
 // API Routes following the specification
-app.use('/login', authRoutes); // POST /login
 app.use('/api/auth', authRoutes);
 app.use('/shipments', shipmentRoutes); // All shipment endpoints
 app.use('/account', accountRoutes); // All account endpoints

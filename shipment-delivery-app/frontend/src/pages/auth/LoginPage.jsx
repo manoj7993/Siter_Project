@@ -11,6 +11,7 @@ const LoginPage = () => {
   const { login } = useAuthContext()
   const navigate = useNavigate()
   const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState('')
 
   const {
     register,
@@ -20,8 +21,9 @@ const LoginPage = () => {
 
   const onSubmit = async (data) => {
     setIsLoading(true)
+    setError('')
     try {
-      const result = await login(data.email, data.password)
+      const result = await login({ email: data.email, password: data.password })
       if (result.success) {
         // Redirect based on user role
         if (result.user.role === 'ADMINISTRATOR') {
@@ -29,9 +31,12 @@ const LoginPage = () => {
         } else {
           navigate('/dashboard')
         }
+      } else {
+        setError(result.error || 'Login failed')
       }
     } catch (error) {
       console.error('Login error:', error)
+      setError('An unexpected error occurred')
     } finally {
       setIsLoading(false)
     }
@@ -60,6 +65,12 @@ const LoginPage = () => {
           </div>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+            {error && (
+              <div className="bg-red-50 border border-red-200 rounded-md p-3">
+                <p className="text-red-800 text-sm">{error}</p>
+              </div>
+            )}
+            
             <div>
               <Input
                 label="Email Address"

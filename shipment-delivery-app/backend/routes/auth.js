@@ -40,7 +40,7 @@ const updatePasswordValidation = [
 ];
 
 // API-02: Login endpoint - POST /login (mounted on /login in server.js)
-router.post('/', loginValidation, login);
+router.post('/login', loginValidation, login);
 
 // Additional auth routes
 router.post('/register', registerValidation, register);

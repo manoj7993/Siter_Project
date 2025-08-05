@@ -3,7 +3,6 @@ import { useForm } from 'react-hook-form'
 import { Plus, Package, Eye, Truck, CheckCircle, XCircle } from 'lucide-react'
 import { useAuthContext } from '../../contexts/AuthContext'
 import { shipmentsAPI } from '../../services/api'
-import Layout from '../../components/layout/Layout'
 import Button from '../../components/ui/Button'
 import Input from '../../components/ui/Input'
 import Select from '../../components/ui/Select'
@@ -99,7 +98,7 @@ const DashboardPage = () => {
     switch (status) {
       case 'CREATED':
         return <Package className="w-4 h-4 text-blue-500" />
-      case 'RECIEVED':
+      case 'RECEIVED':
         return <CheckCircle className="w-4 h-4 text-green-500" />
       case 'INTRANSIT':
         return <Truck className="w-4 h-4 text-orange-500" />
@@ -116,7 +115,7 @@ const DashboardPage = () => {
     switch (status) {
       case 'CREATED':
         return 'bg-blue-100 text-blue-800'
-      case 'RECIEVED':
+      case 'RECEIVED':
         return 'bg-green-100 text-green-800'
       case 'INTRANSIT':
         return 'bg-orange-100 text-orange-800'
@@ -134,17 +133,16 @@ const DashboardPage = () => {
   const completedShipments = shipments.filter(s => ['COMPLETED', 'CANCELLED'].includes(s.status))
 
   return (
-    <Layout>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">
-            Welcome back, {user?.firstName}!
-          </h1>
-          <p className="text-gray-600 mt-2">
-            Manage your shipments and track deliveries
-          </p>
-        </div>
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      {/* Header */}
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold text-gray-900">
+          Welcome back, {user?.firstName}!
+        </h1>
+        <p className="text-gray-600 mt-2">
+          Manage your shipments and track deliveries
+        </p>
+      </div>
 
         {/* Quick Stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
@@ -448,8 +446,7 @@ const DashboardPage = () => {
             </div>
           </form>
         </Modal>
-      </div>
-    </Layout>
+    </div>
   )
 }
 

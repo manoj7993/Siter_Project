@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import { Search, Play, RotateCcw, AlertTriangle } from 'lucide-react'
-// import { useAuthContext } from '@/contexts/AuthContext'
-// import { shipmentsAPI } from '@/services/api'
-import Layout from '@/components/layout/Layout'
-import Button from '@/components/ui/Button'
-import Input from '@/components/ui/Input'
-import Select from '@/components/ui/Select'
-import Card from '@/components/ui/Card'
+// import { useAuthContext } from '../../contexts/AuthContext'
+// import { shipmentsAPI } from '../../services/api'
+import Button from '../../components/ui/Button'
+import Input from '../../components/ui/Input'
+import Select from '../../components/ui/Select'
+import Card from '../../components/ui/Card'
 import toast from 'react-hot-toast'
 
 const DebugPage = () => {

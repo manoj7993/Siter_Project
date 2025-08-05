@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Package, Users, TrendingUp, Settings, Eye, Edit } from "lucide-react";
-// import { useAuthContext } from "@/contexts/AuthContext";
-// import { shipmentsAPI, usersAPI, countriesAPI } from "@/services/api";
-import Layout from "@/components/layout/Layout";
-import Button from "@/components/ui/Button";
-import Card from "@/components/ui/Card";
-import Modal from '@/components/ui/Modal'
-import Input from '@/components/ui/Input'
-import Select from '@/components/ui/Select'
+// import { useAuthContext } from "../../contexts/AuthContext";
+// import { shipmentsAPI, usersAPI, countriesAPI } from "../../services/api";
+import Button from "../../components/ui/Button";
+import Card from "../../components/ui/Card";
+import Modal from '../../components/ui/Modal'
+import Input from '../../components/ui/Input'
+import Select from '../../components/ui/Select'
 import toast from 'react-hot-toast'
 
 const AdminDashboardPage = () => {
@@ -146,24 +145,22 @@ const AdminDashboardPage = () => {
 
   if (isLoading) {
     return (
-      <Layout>
-        <div className="flex items-center justify-center min-h-screen">
-          <div className="animate-spin inline-block w-8 h-8 border-4 border-current border-t-transparent rounded-full" />
-          <span className="ml-3 text-gray-600">Loading dashboard...</span>
-        </div>
-      </Layout>
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin inline-block w-8 h-8 border-4 border-current border-t-transparent rounded-full" />
+        <span className="ml-3 text-gray-600">Loading dashboard...</span>
+      </div>
     )
   }
 
   return (
-    <Layout>
+    <>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">
-            Administrator Dashboard
-          </h1>
-          <p className="text-gray-600 mt-2">
+      {/* Header */}
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold text-gray-900">
+          Administrator Dashboard
+        </h1>
+        <p className="text-gray-600 mt-2">
             Manage shipments, users, and system settings
           </p>
         </div>
@@ -442,7 +439,7 @@ const AdminDashboardPage = () => {
           </div>
         </Modal>
       </div>
-    </Layout>
+    </>
   )
 }
 
